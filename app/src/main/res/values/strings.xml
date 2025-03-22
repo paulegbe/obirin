@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Obirin Weather</string>
+    <string name="app_name">Obirin Weather App</string>
+    <string name="temp_format">%.0f°F</string>
+    <string name="feels_like_format">Feels like %.0f°F</string>
+    <string name="low_format">Low %.0f°F</string>
+    <string name="high_format">High %.0f°F</string>
+    <string name="humidity_format">Humidity %d%%</string>
+    <string name="pressure_format">Pressure %d hPa</string>
 </resources>
