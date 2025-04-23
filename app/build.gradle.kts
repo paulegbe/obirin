@@ -1,7 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+
 }
 
 android {
@@ -37,6 +39,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.7"
+    }
 }
 
 dependencies {
@@ -56,5 +61,28 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Existing dependencies from previous assignments
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+
+
+    // For live data and ViewModel
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v287)
+
+
+    // For loading network images (if you haven’t added it yet)
+    implementation(libs.coil.compose)
+
+    // --- Compose core
+    implementation(libs.ui)
+    implementation(libs.material3)
+    implementation(libs.androidx.runtime.livedata)
+
+    // --- Navigation for Compose
+    implementation(libs.androidx.navigation.compose)
 
 }

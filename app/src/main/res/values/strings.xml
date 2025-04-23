@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">Obirin Weather</string>
-    <string name="city_name">St. Paul, MN</string>
-    <string name="current_temp">72°</string>
-    <string name="feels_like_temp">Feels like 78°</string>
-    <string name="low_temp">Low 65°</string>
-    <string name="high_temp">High 80°</string>
-    <string name="humidity">Humidity 100%</string>
-    <string name="pressure">Pressure 1023 hPa</string>
+    <string name="weather_title">What\'s Today\'s Weather?</string>
+    <string name="enter_zip">Enter 5-digit Zip Code</string>
+    <string name="invalid_zip">Please enter a valid 5-digit ZIP code</string>
+    <string name="weather_button">WEATHER</string>
+    <string name="forecast_button">FORECAST</string>
+    <string name="city_label">City: %1$s</string>
+    <string name="temp_label">Temp: %1$.1f°F</string>
+    <string name="feels_like_label">Feels like: %1$.1f°F</string>
+    <string name="temp_format">%.0f°F</string>
+    <string name="feels_like_format">Feels like %.0f°F</string>
+    <string name="low_format">Low %.0f°F</string>
+    <string name="high_format">High %.0f°F</string>
+    <string name="humidity_format">Humidity %d%%</string>
+    <string name="pressure_format">Pressure %d hPa</string>
+    <string name="weather_icon_desc">Weather condition</string>
 </resources>
