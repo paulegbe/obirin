@@ -85,4 +85,13 @@ dependencies {
     // --- Navigation for Compose
     implementation(libs.androidx.navigation.compose)
 
+    implementation(libs.play.services.location)
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
+
+
+
+
+
 }

@@ -13,8 +13,9 @@ class WeatherViewModel : ViewModel() {
     val weatherData: LiveData<WeatherData> = _weatherData
 
     // For forecast
-    private val _forecastData = MutableLiveData<ForecastResponse>()
-    val forecastData: LiveData<ForecastResponse> = _forecastData
+    private val _forecastData = MutableLiveData<ForecastResponse?>()
+    val forecastData: LiveData<ForecastResponse?> = _forecastData
+
 
     // For error states (optional)
     private val _errorMessage = MutableLiveData<String>()
@@ -45,5 +46,31 @@ class WeatherViewModel : ViewModel() {
     fun clearForecast() {
         _forecastData.value = null
     }
+
+    fun fetchForecastByCoords(lat: Double, lon: Double, apiKey: String, days: Int = 16) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.api.getForecastByCoords(lat, lon, apiKey, days = days, units = "imperial")
+                _forecastData.value = response
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to load forecast by location."
+            }
+        }
+    }
+
+    fun fetchCurrentWeatherByCoords(lat: Double, lon: Double, apiKey: String , days: Int = 16) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.api.getWeatherByCoords(lat, lon, apiKey, units = "imperial")
+                _weatherData.value = response
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to load current weather by location."
+            }
+        }
+    }
+
+
+
+
 }
 

@@ -1,5 +1,14 @@
 package com.example.obirinweather
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.os.Build
+import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,6 +17,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,15 +28,22 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.google.android.gms.location.LocationServices
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun CurrentWeatherScreen(
     viewModel: WeatherViewModel,
@@ -34,6 +52,8 @@ fun CurrentWeatherScreen(
     val weather by viewModel.weatherData.observeAsState()
     var zipCode by remember { mutableStateOf("") }
     val forecast by viewModel.forecastData.observeAsState()
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val iconMap = mapOf(
         "Clear" to R.drawable.sun,
@@ -43,6 +63,23 @@ fun CurrentWeatherScreen(
         "Snow" to R.drawable.snow,
         "Mist" to R.drawable.mist
     )
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                ActivityCompat.requestPermissions(
+                    context as Activity,
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ),
+                    101
+                )
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -79,25 +116,66 @@ fun CurrentWeatherScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            OutlinedTextField(
-                value = zipCode,
-                onValueChange = { newVal ->
-                    if (newVal.length <= 5 && newVal.all { it.isDigit() }) {
-                        zipCode = newVal
-                    }
-                },
-                label = { Text("Enter 5-digit Zip Code", color = Color.White) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = zipCode,
+                    onValueChange = { newVal ->
+                        if (newVal.length <= 5 && newVal.all { it.isDigit() }) {
+                            zipCode = newVal
+                        }
+                    },
+                    label = { Text("Enter 5-digit Zip Code", color = Color.White) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.White,
+                        cursorColor = Color.White,
+                        focusedLabelColor = Color.White,
+                        unfocusedLabelColor = Color.White,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                    ),
+                    modifier = Modifier.weight(1f)
                 )
-            )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(
+                    onClick = {
+                        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
+                        if (ActivityCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                                if (location != null) {
+                                    val lat = location.latitude
+                                    val lon = location.longitude
+                                    viewModel.fetchCurrentWeatherByCoords(lat, lon, "acc199caf12c164dc5c1616b7bf123a9")
+                                    viewModel.fetchForecastByCoords(lat, lon, "acc199caf12c164dc5c1616b7bf123a9", days = 16)
+
+
+                                    val intent = Intent(context, LocationService::class.java)
+                                    context.startForegroundService(intent)
+                                }
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MyLocation,
+                        contentDescription = "My Location",
+                        tint = Color.White
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -248,4 +326,3 @@ fun CurrentWeatherScreen(
         }
     }
 }
-
