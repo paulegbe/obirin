@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ForecastResponse(
-    val city: CityInfo?,
+    val city: CityInfo,
     val cnt: Int? = null,
     val list: List<DailyForecast>
 )

@@ -119,7 +119,7 @@ class LocationService : Service() {
             iconRes = R.drawable.mist
         )
 
-        startForeground(1, notification) // ✅ THIS LINE IS MANDATORY
+        startForeground(1, notification)
     }
 
 

@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obirin Weather</string>
-    <string name="weather_title">What\'s Today\'s Weather?</string>
+    <string name="weather_title">What\'s Today’s Weather?</string>
     <string name="enter_zip">Enter 5-digit Zip Code</string>
     <string name="invalid_zip">Please enter a valid 5-digit ZIP code</string>
     <string name="weather_button">WEATHER</string>
@@ -15,14 +16,5 @@
     <string name="humidity_format">Humidity %d%%</string>
     <string name="pressure_format">Pressure %d hPa</string>
     <string name="weather_icon_desc">Weather condition</string>
-    <string name="title_weather_prompt">What\'s Today\'s Weather?</string>
-    <string name="zip_label">Enter 5-digit Zip Code</string>
-    <string name="button_weather">WEATHER</string>
-    <string name="button_forecast">FORECAST</string>
-    <string name="label_city">City: %1$s</string>
-    <string name="label_temp">Temp: %1$.0f°F</string>
-    <string name="label_feels_like">Feels like: %1$.0f°F</string>
     <string name="label_my_location">My Location</string>
-
-
 </resources>
