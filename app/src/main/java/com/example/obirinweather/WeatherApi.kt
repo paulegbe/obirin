@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface WeatherApi {
     @GET("weather")
     suspend fun getCurrentWeather(
-        @Query("q") zip: String,
+        @Query("q") zip: String ,
         @Query("appid") apiKey: String,
         @Query("units") units: String = "imperial"
     ): WeatherData
@@ -37,7 +37,5 @@ interface WeatherApi {
         @Query("cnt") days: Int,
         @Query("units") units: String = "imperial"
     ): ForecastResponse
-
-
 
 }
